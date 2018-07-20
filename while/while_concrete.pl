@@ -1,18 +1,27 @@
-?- use_module(library(gensym)).
-?- op(700, xfx, :=).
+:- [iddfs].
+:- op(700, xfx, :=).
 
-whileAExprCST(Name) :- atom(Name).
-whileAExprCST(Lit) :- integer(Lit).
-whileAExprCST(L + R) :- whileAExprCST(L), whileAExprCST(R).
+whileAExprCST(Expr) :- iddfs(whileAExprCSTImpl(Expr)).
+whileBExprCST(Expr) :- iddfs(whileBExprCSTImpl(Expr)).
+whileStmtCST(Expr) :- iddfs(whileStmtCSTImpl(Expr)).
 
-whileBExprCST(true).
-whileBExprCST(false).
-whileBExprCST(not(Expr)) :- whileBExprCST(Expr).
-whileBExprCST(and(L, R)) :- whileBExprCST(L), whileBExprCST(R).
-whileBExprCST(L = R) :- whileAExprCST(L), whileAExprCST(R).
+whileAExprCSTImpl(Name) :- atom(Name).
+whileAExprCSTImpl(Lit) :- integer(Lit).
+whileAExprCSTImpl(L + R) :- whileAExprCSTImpl(L), whileAExprCSTImpl(R).
+whileAExprCSTImpl(L - R) :- whileAExprCSTImpl(L), whileAExprCSTImpl(R).
+whileAExprCSTImpl(L * R) :- whileAExprCSTImpl(L), whileAExprCSTImpl(R).
 
-whileStmtCST(skip).
-whileStmtCST(Name := Expr) :- atom(Name), whileAExprCST(Expr).
-whileStmtCST(if(C, T, E)) :- whileBExprCST(C), whileStmtCST(T), whileStmtCST(E).
-whileStmtCST(while(Cond, Body)) :- whileBExprCST(Cond), whileStmtCST(Body).
-whileStmtCST(L; R) :- whileStmtCST(L), whileStmtCST(R).
+whileBExprCSTImpl(true).
+whileBExprCSTImpl(false).
+whileBExprCSTImpl(not(Expr)) :- whileBExprCSTImpl(Expr).
+whileBExprCSTImpl(and(L, R)) :- whileBExprCSTImpl(L), whileBExprCSTImpl(R).
+whileBExprCSTImpl(L = R) :- whileAExprCSTImpl(L), whileAExprCSTImpl(R).
+
+whileStmtCSTImpl(skip).
+whileStmtCSTImpl(Name := Expr) :- atom(Name), whileAExprCSTImpl(Expr).
+whileStmtCSTImpl(if(C, T, E)) :-
+    whileBExprCSTImpl(C),
+    whileStmtCSTImpl(T),
+    whileStmtCSTImpl(E).
+whileStmtCSTImpl(while(Cond, Body)) :- whileBExprCSTImpl(Cond), whileStmtCSTImpl(Body).
+whileStmtCSTImpl(L; R) :- whileStmtCSTImpl(L), whileStmtCSTImpl(R).
