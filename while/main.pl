@@ -1,6 +1,6 @@
 #!/usr/bin/env swipl
 
-:- [analysis_reaching, while].
+:- [analysis_available, while].
 :- initialization(main, program).
 
 main :-
@@ -12,10 +12,18 @@ main :-
             y := y - 1);
         y := 0
     ),
-    assertWhileStmt(Program, ProgId),
+    assertWhileStmt(Program, ProgramId),
+	!,
+	% Print the program again.
+	formatStmt(ProgramId, PP), format('~p~n', [PP]),
+	!,
 	% Print flow analysis.
-	findall(format('~p -> ~p~n', [From, To]), flow(From, To), _),
+	flows(ProgramId, F), format('Flows = ~p~n', [F]),
+	!,
 	% Print evaluation.
-    evalStmt(ProgId, _, Env),
-    format('Env = ~p~n', [Env]),
+	evalStmt(ProgramId, [x:10], Env),
+	assoc(z, Z, Env),
+	format('Env = ~p~nEnv.z = ~p~n', [Env, Z]),
+	!,
+	% Exit.
     halt.

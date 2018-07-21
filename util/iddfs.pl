@@ -1,5 +1,3 @@
-% A metainterpreter using IDDFS.
-
 iddfs(Goal) :- iddfs(Goal, [true/0, atom/1, integer/1, is/2]).
 iddfs(Goal, Builtins) :-
     counter(N),

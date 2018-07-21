@@ -1,5 +1,6 @@
 :- [while_predicates].
 :- op(1050, yfx, <-).
+:- table flow/2.
 
 flow(From, To) :-
     stmt(_, Stmt),
