@@ -1,0 +1,35 @@
+name:       lambdapi
+version:    0.1.0.0
+github:     "remexre/lambdapi"
+license:    MIT
+author:     "Nathan Ringo"
+maintainer: "remexre@gmail.com"
+copyright:  "2018 Nathan Ringo"
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  lambdapi-exe:
+    main:        Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lambdapi
+
+tests:
+  lambdapi-test:
+    main:        Spec.hs
+    source-dirs: test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lambdapi
