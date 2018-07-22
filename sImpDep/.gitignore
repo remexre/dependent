@@ -1,0 +1,7 @@
+.*
+!.gitignore
+
+*.jar
+
+build.xml
+Parser_xyz_remexre_simpdep_compiler_parse.copperdump.html
